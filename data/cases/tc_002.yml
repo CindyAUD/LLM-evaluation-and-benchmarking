@@ -1,0 +1,26 @@
+# tc_002 should be adversarial — and the most natural adversarial case in an auction system is a cancelled bid.
+# Here's the scenario:
+
+# Dave outbids Carol. Then Dave cancels. A naive model that just looks at the highest amount returns Dave. 
+# But Dave's bid is invalid. The correct answer is Carol.
+# This is a great second case because:
+
+# It catches models that ignore the cancelled flag
+# The answer requires reasoning about bid validity, not just bid order
+# It's a realistic real-world scenario — bid cancellations happen
+
+# And notice — this one can't use an exact scorer. 
+# The answer involves reasoning, so we'll use the judge tier with a rubric checklist for expected.
+id: tc_002
+question: "Who holds the highest valid bid on item_305?"
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: carol, amount: 150, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: dave,  amount: 160, ts: "2024-01-01T10:05:00Z" }
+    - { bidder: dave,  amount: 160, ts: "2024-01-01T10:06:00Z", cancelled: true }
+expected:
+  - "identifies carol as the current high bidder"
+scorer: judge # We need the judge tier to evaluate the reasoning about cancelled bids.
+tags: [adversarial, cancelled]
+notes: "Tests handling of cancelled bids. Dave's higher bid is invalid, so Carol wins."

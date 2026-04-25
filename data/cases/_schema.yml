@@ -1,0 +1,52 @@
+# ─────────────────────────────────────────────
+# Eval harness — test case schema reference
+# Every field documented here. Not a real test case.
+
+# id: "test-case-id"
+# description: "A brief description of the test case."
+# input: "The input to the model, can be a string or structured data."
+# expected_output: "The expected output from the model, can be a string or structured data."
+# metadata:
+#   # Optional metadata about the test case, such as:
+#   difficulty: "easy"  # or "medium", "hard"
+#   category: "math"  # or "language", "reasoning", etc.
+#   tags: ["algebra", "geometry"]  # List of relevant tags
+#   source: "https://example.com/source-of-test-case"  # Optional source URL
+#   # Any other relevant metadata fields can be added here
+
+# Unique identifier. Format: tc_NNN (zero-padded to 3 digits)
+id: tc_000 #The tc_000 is the reserved ID for this schema file specifically. Real test cases start at tc_001
+question: "Who holds the highest bid on item_305?" # The question posed to the model under evaluation
+# Auction context passed to the model.
+
+
+# for prose-format variants that stress-test the model differently.
+context:
+  item_id: item_305
+  bid_events: # bid_events are always ordered by timestamp ascending.
+    - { bidder: alice, amount: 120, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 135, ts: "2024-01-01T10:05:00Z" }
+    - { bidder: alice, amount: 140, ts: "2024-01-01T10:07:00Z" }
+  context_text: "Optional prose description of the auction state." # Use context_text instead of (or alongside) bid_events
+
+# Expected answer. Two formats:
+#   string → exact and semantic scorers
+#   list   → LLM judge uses this as a rubric checklist
+expected: "alice"
+# OR:
+# expected:
+#   - "identifies alice as the current high bidder"
+#   - "references her final bid amount of 140"
+
+# Primary scorer tier:
+#   exact    → string match (fast, free, unambiguous answers)
+#   semantic → embedding similarity (paraphrase-tolerant)
+#   judge    → LLM rubric (open-ended, multi-criteria)
+scorer: exact
+
+# Tags for slicing results. Pick any combination:
+#   happy_path, edge_case, adversarial, multi_step, cancelled, concurrent
+tags: [happy_path]
+
+# Intent of this test case — for your future self and interviewers.
+notes: "Baseline case. Simple outbid sequence, alice wins with final bid."

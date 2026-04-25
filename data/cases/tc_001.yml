@@ -1,0 +1,26 @@
+#This is our happy path case — clean input, unambiguous answer
+id: tc_001
+question: "Who holds the highest bid on item_305?"
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: alice, amount: 120, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 135, ts: "2024-01-01T10:05:00Z" }
+    - { bidder: alice, amount: 140, ts: "2024-01-01T10:07:00Z" }
+expected: "alice"
+scorer: exact
+tags: [happy_path]
+notes: "Simple outbid sequence. Alice opens, Bob outbids, Alice wins it back."
+
+# This test case checks the model's ability to track a straightforward bidding 
+#sequence and identify the current high bidder. The input is clean and unambiguous, 
+#making it ideal for validating basic functionality before introducing more complex scenarios.
+
+#Okay so tc_001 is the baseline. It's clean because:
+
+#Bids are in order
+#No cancellations
+#One clear winner
+#The answer is a single word — perfect for an exact scorer
+
+#A model that can't get tc_001 right can't get anything right. It's our sanity check.
