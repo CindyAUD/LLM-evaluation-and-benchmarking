@@ -1,0 +1,18 @@
+# Bid history count — "how many times did Alice bid?" → exact (simple aggregation, no validity reasoning)
+# Alice bids three times on item_305. Question: how many times has alice bid?
+
+# This tests whether the model can count events rather than just find a maximum
+id: tc_004
+question: "How many times did Alice bid on item_305?"
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: alice, amount: 120, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 135, ts: "2024-01-01T10:05:00Z" }
+    - { bidder: alice, amount: 140, ts: "2024-01-01T10:07:00Z" }
+    - { bidder: alice, amount: 150, ts: "2024-01-01T10:10:00Z" }
+expected:
+  - "states that alice bid 3 times"
+scorer: judge
+tags: [happy_path]
+notes: "Tests ability to count specific events in the bid history. Alice bids three times, so the answer is 3. This checks if the model can perform simple aggregation tasks, not just identify maximums or specific values."

@@ -39,9 +39,10 @@ expected: "alice"
 #   - "references her final bid amount of 140"
 
 # Primary scorer tier:
-#   exact    → string match (fast, free, unambiguous answers)
-#   semantic → embedding similarity (paraphrase-tolerant)
-#   judge    → LLM rubric (open-ended, multi-criteria)
+#   
+# exact	- Answer is a single word/ID, no ambiguity
+# semantic	- Answer has variants — "alice", "Alice", "alice (140)"
+# judge	- Multi-criterion reasoning required
 scorer: exact
 
 # Tags for slicing results. Pick any combination:

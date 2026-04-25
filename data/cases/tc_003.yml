@@ -1,0 +1,23 @@
+# Here's the scenario for tc_003:
+
+# Alice bids 100. Bob bids 150. Carol bids 200. Simple ascending sequence, three bidders, no complications.
+# Question: what is the current highest bid amount?
+# This is a happy path case, but it differs from tc_001 because:
+# The question asks for the bid amount, not the bidder name. This tests if the model can extract different types of information from the same context.
+# The expected answer is a number, not a name. This checks if the model can handle different answer formats.
+# The model needs to understand that the highest bid is 200, not just identify the bidder. This tests its ability to reason about the bid amounts, not just the order of bids.
+
+id: tc_003
+question: "What is the current highest bid amount on item_305?"
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: alice, amount: 100, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 150, ts: "2024-01-01T10:05:00Z" }
+    - { bidder: carol, amount: 200, ts: "2024-01-01T10:10:00Z" }
+expected: "200"
+scorer: semantic # We use semantic scorer here because we want to allow for different valid formats of the answer (e.g., "200", "$200", "The highest bid is 200", etc.) that all convey the same meaning but would fail an exact match. The semantic scorer will evaluate the meaning rather than the exact wording, making it more robust for this type of question.
+tags: [happy_path]
+notes: "Tests ability to identify the highest bid amount, not just the bidder. Simple ascending sequence with three bidders."
+
+#think about what happens when the model responds with "$200" or "200.00" or "The highest bid is 200". All of those are semantically correct but will fail an exact match.
