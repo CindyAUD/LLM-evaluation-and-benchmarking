@@ -1,0 +1,30 @@
+#Alice bids multiple times on item_305. Question: what is alice's total committed amount across all her bids?
+#The interesting design decision here — does "total committed" mean sum of all her bids, or just her current highest bid? Make sure your context_text defines it clearly, otherwise the question is ambiguous.
+#Scenario for tc_012:
+
+#Alice bids 100, then 120, then 140 on item_305. Bob bids 110. Question: What is Alice's total committed amount across all her bids? (Expected: 360)
+
+#This tests whether the model sums across a single bidder's history rather than just reporting the highest or most recent.
+
+#Write tc_012.yml. Think about:
+
+#Do we need to clarify that "total committed" means sum of all bid amounts (not just winning bid)?
+
+#Scorer: numeric answer — exact or semantic? semantic might be better if model says "$360" vs "360 dollars"
+
+#Tags: multi_step, aggregation
+id: tc_012
+question: "What is Alice's total committed amount across all her bids on item_305?"
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: alice, amount: 100, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: alice, amount: 120, ts: "2024-01-01T10:05:00Z" }
+    - { bidder: alice, amount: 140, ts: "2024-01-01T10:10:00Z" }
+    - { bidder: bob,   amount: 110, ts: "2024-01-01T10:15:00Z" }
+  context_text: "Total committed amount refers to the sum of all bid amounts placed by the bidder, regardless of whether they are currently winning or not."
+expected:
+  - "states alice's total committed amount is 360"
+scorer: judge
+tags: [multi_step, aggregation]
+notes: "Tests the model's ability to perform multi-step reasoning and aggregation across a bidder's entire bidding history. Judge rubric enforces correct summation of all bids placed by Alice, rather than

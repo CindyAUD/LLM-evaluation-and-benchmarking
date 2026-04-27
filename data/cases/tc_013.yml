@@ -1,0 +1,23 @@
+#We need to write tc_013.yml for price history. Scenario: four bidders, ascending bids. Question: "What was the bid amount immediately before carol took the lead?" Need to design bid_events so carol takes the lead at some point, and there is a previous bid (from someone else) that was the highest before carol's winning bid. The answer is that previous bid amount. Use judge scorer for numeric precision. Tags: multi_step, temporal_reasoning, price_history.
+#Let me construct a plausible sequence:
+#alice bids 100
+#bob bids 120 (alice outbid, bob leads)
+#carol bids 130 (carol takes lead from bob)
+#dave bids 140 (irrelevant after)
+#The bid amount immediately before carol took the lead was 120 (bob's bid). Ensure carol didn't lead from start. Also ensure no ties
+
+id: tc_013
+question: "What was the bid amount immediately before carol took the lead on item_305?"
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: alice, amount: 100, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 120, ts: "2024-01-01T10:05:00Z" }
+    - { bidder: carol, amount: 130, ts: "2024-01-01T10:10:00Z" }  # carol takes lead here
+  context_text: "Bids are listed in chronological order. 'Took the lead' means the moment a bidder's amount becomes the highest so far."
+expected:
+  - "states that the bid amount before carol took the lead was 120"
+  - "does not return any other number as the answer"
+scorer: judge
+tags: [multi_step, temporal_reasoning, price_history]
+notes: "Tests ability to identify when a specific bidder (carol) first becomes the leader, then retrieve the immediately preceding highest bid amount (bob's 120). Requires temporal ordering and state tracking."
