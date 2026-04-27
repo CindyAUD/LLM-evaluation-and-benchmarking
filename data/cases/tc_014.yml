@@ -1,0 +1,22 @@
+id: tc_014
+question: "What is alice's current bid and what is her maximum bid on item_305?"
+context:
+  item_id: item_305
+  proxy_rules:
+    - bidder: alice
+      max_bid: 200
+      increment: 10
+  bid_events:
+    - { bidder: bob,   amount: 150, ts: "2024-01-01T10:00:00Z", type: "manual" }
+    - { bidder: system, amount: 160, ts: "2024-01-01T10:00:01Z", on_behalf_of: alice, type: "auto" }
+    - { bidder: carol, amount: 170, ts: "2024-01-01T10:05:00Z", type: "manual" }
+    - { bidder: system, amount: 180, ts: "2024-01-01T10:05:01Z", on_behalf_of: alice, type: "auto" }
+    # No further bids — current = 180, max = 200
+  context_text: "Alice has set a proxy bid with a maximum of 200 and an increment of 10. The system auto-bids for her whenever she is outbid, stopping at her max. The current bid is the highest bid the system has placed for her so far."
+expected:
+  - "states that alice's current bid is 180"
+  - "states that alice's maximum bid is 200"
+  - "does not state that alice's current bid equals her maximum"
+scorer: judge
+tags: [multi_step, proxy_bid, edge_case]
+notes: "Tests distinction between current proxy bid (180) and max (200). Model must aggregate bids from 'system' where on_behalf_of=alice, find the highest among them, and separately report the proxy max."
