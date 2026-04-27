@@ -1,0 +1,14 @@
+id: tc_008
+question: "Who won the auction for item_305?"
+context:
+  item_id: item_305
+  reserve_price: 200
+  bid_events:
+    - { bidder: alice, amount: 120, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 150, ts: "2024-01-01T10:05:00Z" }
+    - { bidder: carol, amount: 160, ts: "2024-01-01T10:10:00Z" }  # highest, but still below reserve
+  context_text: "The auction has a reserve price. If no bid meets or exceeds the reserve, the item is not sold."
+expected: "nobody won"
+scorer: semantic
+tags: [edge_case, reserve_not_met]
+notes: "Highest bid is 160 from carol, but reserve is 200 → no winner. Tests that model checks reserve before declaring a winner, rather than simply returning highest bidder."
