@@ -1,0 +1,19 @@
+#concurrent bids case — same timestamp, same amount
+#A case where the model recognises the ambiguity and says "it's a tie / cannot be determined"
+# Alice and bob submit bids of exactly 150 at the exact same timestamp. Question: who holds the highest bid?
+
+#The correct answer is that it cannot be determined from the available information — the model should acknowledge the tie rather than arbitrarily picking a winner.
+id: tc_010
+question: "Who holds the highest bid on item_305?"
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: alice, amount: 150, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 150, ts: "2024-01-01T10:00:00Z" }
+  context_text: "Bids with identical timestamps are considered concurrent."
+expected:
+  - "acknowledges that both alice and bob have equal bids"
+  - "does not declare a single winner"
+scorer: judge
+tags: [edge_case, concurrent, uncertainty]
+notes: "Tests intellectual honesty under ambiguity. Judge rubric enforces both positive recognition of the tie and negative constraint against picking a winner."

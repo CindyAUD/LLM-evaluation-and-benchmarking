@@ -1,0 +1,19 @@
+#concurrent bids case — same timestamp, same amount
+#A case where the system has a defined tiebreaker rule and the model applies it correctly.
+
+# Alice and bob submit bids of exactly 150 at the exact same timestamp. Question: who holds the highest bid?
+# The correct answer is that Alice holds the highest bid, as the tiebreaker rule states that in the case of identical bids and timestamps, the bidder with the lexicographically smaller name wins (Alice < Bob).
+#Add this to the context: tiebreaker: "alphabetical_asc"
+id: tc_011
+question: "Who holds the highest bid on item_305?"
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: alice, amount: 150, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 150, ts: "2024-01-01T10:00:00Z" }
+  tiebreaker: "alphabetical_asc"
+expected:
+  - "identifies alice as the winner based on the tiebreaker rule"
+scorer: judge
+tags: [edge_case, concurrent, tiebreaker]
+notes: "Tests correct application of a defined tiebreaker rule under conditions of identical bids and timestamps. Judge rubric enforces correct identification of the winner based on the specified tiebreaker."
