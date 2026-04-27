@@ -1,0 +1,14 @@
+id: tc_006
+question: "Who was leading the auction for item_305 at 10:08 UTC?"
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: alice, amount: 100, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 110, ts: "2024-01-01T10:04:00Z" }
+    - { bidder: carol, amount: 125, ts: "2024-01-01T10:07:00Z" }  # ← leading at 10:08
+    - { bidder: alice, amount: 130, ts: "2024-01-01T10:10:00Z" }  # ← final leader, after cutoff
+  context_text: "Bids are listed in chronological order. The auction started at 10:00 UTC."
+expected: "carol"
+scorer: semantic
+tags: [multi_step]
+notes: "Tests whether the model ignores bids after the specified timestamp (10:10 bid). Leader at 10:08 is carol (125). Final leader is alice (130). Using semantic scorer to tolerate capitalization, extra whitespace, or format variants like 'carol (125) Requires filtering bids by timestamp, finding max among subset, then identifying bidder. Final leader (alice at 130) is a distractor.'."

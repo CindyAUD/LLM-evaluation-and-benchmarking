@@ -1,0 +1,19 @@
+id: tc_007
+question: "List all unique bidders who placed bids on item_305."
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: alice, amount: 100, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 110, ts: "2024-01-01T10:05:00Z" }
+    - { bidder: alice, amount: 125, ts: "2024-01-01T10:10:00Z" }
+    - { bidder: carol, amount: 130, ts: "2024-01-01T10:15:00Z" }
+    - { bidder: bob,   amount: 140, ts: "2024-01-01T10:20:00Z" }
+  context_text: "A bidder may appear multiple times in the event log."
+expected:
+  - "includes alice"
+  - "includes bob"
+  - "includes carol"
+  - "does not include any bidders outside {alice, bob, carol}"
+scorer: judge
+tags: [happy_path]
+notes: "Simple deduplication across bid history. Judge rubric ensures completeness and precision."

@@ -1,0 +1,16 @@
+#still happy path, but a new question type: who was the first bidder?
+#This tests whether the model can reason about order from the beginning rather than just finding the current state.
+#Use item_305, mix in a few bidders, and think carefully about the scorer.
+
+id: tc_005
+question: "Who was the first bidder on item_305?"
+context:
+  item_id: item_305
+  bid_events:
+    - { bidder: alice, amount: 120, ts: "2024-01-01T10:00:00Z" }
+    - { bidder: bob,   amount: 135, ts: "2024-01-01T10:05:00Z" }
+    - { bidder: carol, amount: 140, ts: "2024-01-01T10:07:00Z" }
+expected: "alice was the first bidder"
+scorer: semantic
+tags: [happy_path]
+notes: "Tests ability to identify the first bidder in the sequence. Alice is the first bidder, so the answer is alice. This checks if the model can reason about the order of events from the beginning, not just the current state." 
