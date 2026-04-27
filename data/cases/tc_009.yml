@@ -1,0 +1,12 @@
+#An item exists in the system but nobody has bid on it yet. 
+#The model should say no bids have been placed. A model that hallucinates an answer or crashes on an empty list fails this case
+id: tc_009
+question: "Who holds the highest bid on item_305?"
+context:
+  item_id: item_305
+  bid_events: []  # No bids placed
+  context_text: "The auction has started but no bids have been submitted yet."
+expected: "no bids have been placed"
+scorer: semantic
+tags: [edge_case, empty_bids]
+notes: "Tests handling of empty bid_events list. Model should not hallucinate a bidder or crash. Correct answer indicates absence of bids, not 'nobody wins' (which implies an auction with unmet reserve)."
